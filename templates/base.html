@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="UTF-8">
+   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" name="viewport">
+   <title>{% block title %}{% endblock %}</title>
+
+   <!-- Favicon-->
+   <link rel="icon" href="../favicon.ico" type="image/x-icon">
+
+   <!-- Google Fonts -->
+   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+   <!-- Bootstrap Core Css -->
+   <link href="/static/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+   <!-- Waves Effect Css -->
+   <link href="/static/plugins/node-waves/waves.css" rel="stylesheet" />
+
+   <!-- Animation Css -->
+   <link href="/static/plugins/animate-css/animate.css" rel="stylesheet" />
+   
+   <!-- Sweetalert Css -->
+    <link href="/static/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+   <!-- Custom Css -->
+   <link href="/static/css/adminbsb-materialdesign/style.css" rel="stylesheet">
+
+   <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+   <link href="/static/css/adminbsb-materialdesign/themes/all-themes.css" rel="stylesheet" />
+    
+    {% block head %}
+
+    {% endblock %}
+</head>
+
+<body class="theme-red">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <div class="search-icon">
+            <i class="material-icons">search</i>
+        </div>
+        <input type="text" placeholder="START TYPING...">
+        <div class="close-search">
+            <i class="material-icons">close</i>
+        </div>
+    </div>
+    <!-- #END# Search Bar -->
+    <!-- Top Bar -->
+    <nav class="navbar" style="background-color: #03A9F4">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="javascript:void(0);">{% block contenttitle %}{% endblock %}</a>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="" >
+                <img src="/static/img/isoulu.png"/>
+                <div class="">
+{#                     <img src="/static/img/sidebar-background.jpg"/>#}
+                </div>
+                <div class="info-container">
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">MAIN NAVIGATION</li>
+                    <li>
+                    <a href="javascript:void(0);" class="menu-toggle">
+                        <i class="material-icons"><img  src="/static/img/baseline_account_circle_black_18dp.png"></i>
+                        <span>회원정보</span>
+                    </a>
+                    <ul class="ml-menu">
+                        <li>
+                            <a href="{% url 'sign_in' %}">로그인</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'create_member' %}">회원가입</a>
+                        </li>
+                    </ul>
+                </li>
+
+                    <li>
+                    <a href="javascript:void(0);" class="menu-toggle">
+                        <i class="material-icons"><img  src="/static/img/baseline_place_black_18dp.png"></i>
+                        <span>지도로 서울시 보기</span>
+                    </a>
+                    <ul class="ml-menu">
+                        <li>
+                            <a href="{% url 'culture' %}">서울시 문화 보기</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'health_welfare' %}">서울시 보건복지 보기</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'facility' %}">서울시 시설 보기</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'education' %}">서울시 교육 보기</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'population' %}">서울시 인구 보기</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'traffic' %}">서울시 교통 보기</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'environment' %}">서울시 환경 보기</a>
+                        </li>
+                    </ul>
+                </li>
+
+                   <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons"><img  src="/static/img/baseline_local_library_black_18dp.png"></i>
+                            <span>문화</span>
+                        </a>
+                        <ul class="ml-menu">
+                        <li>
+                                <a href="{% url 'bbs:selectAll' %}">게시판</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'map:start' %}">행사 정보</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons"><img  src="/static/img/baseline_bar_chart_black_18dp.png"></i>
+                            <span>데이터 차트</span>
+                        </a>
+                        <ul class="ml-menu">
+                        <li>
+                                <a href="{% url 'chart:traffic' %}">교통</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'chart:education' %}">교육</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'chart:environment' %}">환경</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'chart:medical_crime' %}">의료 & 치안</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons"><img  src="/static/img/baseline_grade_black_18dp.png"></i>
+                            <span>자치구 랭킹!</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'chart:result' %}">데이터로 알아보는 자치구</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'chart:rank' %}">랭킹</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+             #Menu
+             Footer
+            <div class="legal">
+            	<div>
+            		<a href="https://github.com/yiunsr/imglst" target="_blank">
+            		</a>
+            		<br/><br/>
+            	</div>
+                <div class="copyright">
+                    &copy; 2020 <a target="_blank" href="https://github.com/shfkstjsanf/DjangoProject">깃 링크</a>
+                </div>
+{#                <div class="version">#}
+{#                    <b>Version: </b> 1.0.4#}
+{#                </div>#}
+            </div>
+            <!-- #Footer -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+        <!-- Right Sidebar -->
+        <aside id="rightsidebar" class="right-sidebar">
+            <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
+                <li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>
+            </ul>
+        </aside>
+        <!-- #END# Right Sidebar -->
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+              {% block content %}
+
+              {% endblock %}
+        </div>
+    </section>
+    
+    
+
+    
+    
+    
+    <!-- Jquery Core Js -->
+    <script src="/static/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="/static/plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="/static/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="/static/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="/static/plugins/node-waves/waves.js"></script>
+    
+      <!-- SweetAlert Plugin Js -->
+    <script src="/static/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Custom Js -->
+    <script src="/static/js/adminbsb-materialdesign/admin.js"></script>
+
+    <!-- Demo Js -->
+    <!--<script src="/static/js/adminbsb-materialdesign/demo.js"></script> --> 
+    
+    <script src="/static/js/common.js?jsver{{ jsver }}"></script>
+    
+    {% block script %} 
+ 
+    {% endblock %}
+</body>
+
+</html>

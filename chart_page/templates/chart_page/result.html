@@ -1,0 +1,418 @@
+{% extends "base.html" %}
+
+{% block contenttitle %}자치구 분석 정보 {% endblock %}
+{% block title %}살기 좋은 자치구 분석 데이터{% endblock %}
+
+{% block head %}
+<style>
+canvas[data-class]{
+    width:600px;
+    height:427px;
+}
+.hanglue{
+    font-family:'Malgun Gothic';
+    font-size:15pt;
+    font-weight:bold;
+}
+.item_none{
+    height:80px;
+    margin-left:20px;
+    height:40px;
+}
+
+
+
+label[for=eyes_01], label[for=eyes_02], label[for=nose_01], label[for=nose_02], label[for=mouth_01], label[for=mouth_02] {
+    margin-left:20px;
+    height:inherit;
+}
+.eyes_01{
+    width:100px;
+    height:40px;
+}
+.eyes_02{
+    width:50px;
+    height:40px;
+}
+.nose_01{
+    width:30px;
+    height:50px;
+}
+.nose_02{
+    width:30px;
+    height:30px;
+}
+.mouth_01{
+    width:50px;
+    height:30px;
+}
+.mouth_02{
+    width:60px;
+    height:30px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+            <div class="row clearfix">
+                        <!-- Line Chart -->
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h1 align="center" style="color:deepskyblue">데이터로 알아보는 살기좋은 서울시 자치구</h1>
+                                    <div class="hanglue"> 서울에서 가장 살기 좋은 자치구는 어디일까요?
+                                        서울 열린데이터광장 을 통해 산출한 5개 카테고리(치안·의료·환경·교통·교육)
+                                        를 통해 25개 자치구의 현황을 들여다봅니다.</div>
+                                </div>
+                                <div class="body">
+                                    <h2>서울시 5대 범죄 발생통계</h2>
+                                    <div id="chartDiv" style="max-width: 900px;height: 400px;margin: 0px auto"></div>
+                                    <div class="hanglue">
+                                        5개의 지표 중 사람들이 중요하다고 여기는 것이<br> 범죄율 입니다.
+                                        자치구 중 범죄율이 가장 높은 지역은<br> 강남구로써 유동인구가 높은 곳인 만큼 범죄율이<br>
+                                        높아 보입니다. 검거율이랑 관계없이 범죄 발생이<br> 높을수록 낮은 평점을 부여했습니다.
+
+
+                                   <h2 align="right">서울시 의료시설 통계</h2>
+                                    <div style="float:right" class="hanglue">
+                                        의료 인프라는 단순 병원의수 보다 병실개수와 함께 비교하였습니다.<br>
+                                        강남구가 병원수와 병실수가 가장 많은 자치구로 나타났습니다.<br>
+                                    </div>
+                                    <img src="/static/img/medical.png">
+                                    <canvas id="seoul_medical-chart" data-url="{% url 'chart:seoul_medical-chart' %}" height="150"></canvas>
+
+                                     <h2>서울시 교통 통계</h2>
+                                    <img align="right" src="/static/img/Transport-Bus-icon.png">
+                                    <div class="hanglue">
+                                        자치구별 통근 통학시 교통수단 데이터 입니다.<br>
+                                         버스 지하철  버스+지하철  자가용으로 나뉘며<br>
+                                        버스와 지하철 이용비율이 높을수록 대중교통<br>
+                                        접근성이 높다고 판단하여 점수를 주었습니다.<br>
+                                        자가용 이용 비율이 가장 높은곳은 강남구<br>
+                                        버스+지하철 이용 비율이 가장 높은곳은 강서구<br>
+                                        지하철 이용 비율이 가장 높은 곳은광진구<br>
+                                        버스 이용 비율이 가장 높은 곳은 동작구<br>
+                                        로 나타났습니다.<br>
+                                    </div>
+                                    <canvas id="commute-chart" data-url="{% url 'chart:commute-chart' %}" height="150"></canvas>
+
+                                     <h2 align="right">서울시 자연환경 통계</h2>
+                                    <div align="right" class="hanglue">
+                                        자연환경 요소를 고려할떄 미세먼지 농도<br>
+                                        생활 폐기물 발생량등 여러 요인을 고려할수 있겠지만<br>
+                                        이번 분석에서는 일반 녹지 현황을 선정하였습니다. <br>
+                                        강동구 영등포구 마포구 순으로<br>
+                                        녹지화가 잘된것을 확인할수 있습니다.<br>
+                                    </div>
+                                    <img src="/static/img/envi_icon.png">
+                                     <canvas id="seoul_envi-chart" data-url="{% url 'chart:seoul_envi-chart' %}" height="150"></canvas>
+
+                                      <img align="right" src="/static/img/edu_icon.png">
+                                      <h2>서울시 교육현황 통계</h2>
+                                    <div class="hanglue">
+                                        교육을 평가할떄 학생당 교원당 학생수는<br>
+                                        중요한 역활을 합니다. OECD기준(2016)<br>
+                                        초등학교(16.5) 중학교(14.7) 고등학교(13.8)로<br>
+                                        OECD 평균 (15.0, 12.7, 13.0) 대비 높은 수치로 나타<br>
+                                        났습니다. 가장 높은 비율을 나타내는 지역은<br>
+                                        서초구 강남구 순으로 확인할수 있엇습니다.<br>
+                                    </div>
+                                    <canvas id="seoul_education-chart" data-url="{% url 'chart:seoul_education-chart' %}" height="150"></canvas>
+
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- #END# Line Chart -->
+                    </div>
+
+
+
+{% csrf_token %}
+{% endblock %}
+
+{% block script %}
+
+  <div id="container" style="width: 75%;">
+{#    <canvas id="population-chart" data-url="{% url 'chart:population-chart' %}"></canvas>#}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+
+  <script>
+
+  $(function medicalChart() {
+
+      var $medicalChart = $("#seoul_medical-chart");
+      $.ajax({
+        url: $medicalChart.data("url"),
+        success: function (data) {
+          var ctx = $medicalChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [
+                  {
+                label: '병원수',
+                  backgroundColor: '#3e95cd',
+                data: data.medical
+              },
+                  {
+                       label: '병실개수',
+                  backgroundColor: '#8e5ea2',
+                data: data.medical_room
+                  }
+              ]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Medical Chart(단위:개수)'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+    $(function commuteChart() {
+      var i = 0;
+      var $commuteChart = $("#commute-chart");
+      {#alert('1')#}
+      $.ajax({
+        url: $commuteChart.data("url"),
+        success: function (data) {
+          var ctx = $commuteChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                              {
+                                  label: '버스',
+                        data: data.bus,
+                        backgroundColor: '#E0E6F8',
+                      },
+                      {
+                          label: '지하철',
+                        data: data.trail,
+                        backgroundColor: '#A8DFF1',
+                      },
+                      {
+                          label: '버스+지하철',
+                        data: data.bus_trail,
+                        backgroundColor: '#0080ff',
+                      },
+                          {
+                              label: '자가용 차',
+                        data: data.mycar,
+                        backgroundColor: '#0000FF',
+                      }
+                      ]
+                  },
+            options: {
+                scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        },
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: ' Commute Chart(단위:%)'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+    $(function environmentChart() {
+
+      var $environmentChart = $("#seoul_envi-chart");
+      $.ajax({
+        url: $environmentChart.data("url"),
+        success: function (data) {
+          var ctx = $environmentChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: '녹지화 면적',
+                  backgroundColor: '#19B3B1',
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'environment Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+    $(function educationChart() {
+
+      var $educationChart = $("#seoul_education-chart");
+      $.ajax({
+        url: $educationChart.data("url"),
+        success: function (data) {
+          var ctx = $educationChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [
+                  {
+                label: '교원 1인당 학생수',
+                  backgroundColor: '#9A1B27',
+                data: data.data
+              },
+
+              ]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Education Chart(단위:명수)'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+
+
+        var chart = JSC.chart('chartDiv', {
+  debug: true,
+  type: 'horizontal column',
+  title_label_text:
+    'the number of crimes(단위:명)',
+  yAxis: {
+    scale_type: 'stacked',
+    defaultTick_label_text:
+      '{Math.abs(%Value):a2}'
+  },
+  xAxis: {
+    label_text: '자치구',
+    crosshair_enabled: true
+  },
+  defaultTooltip_label_text:
+    'Ages %xValue:<br><b>%points</b>',
+  defaultPoint_tooltip:
+    '%icon {Math.abs(%Value)}',
+  legend_template:
+    '%name %icon {Math.abs(%Value)}',
+  series: [
+    {
+      name: '검거율',
+      points: {
+        mapTo: 'x,y',
+        data: [
+         ['종로구',-3913],
+        ['중구',-2679],
+        ['용산구',-2543],
+        ['성동구',-1787],
+        ['광진구',-2789],
+        ['동대문구',-2968],
+        ['중랑구',-3222],
+        ['성북구',-2277],
+        ['강북구',-2743],
+        ['도봉구',-1676],
+        ['노원구',-2725],
+        ['은평구',-2863],
+        ['서대문구',-2016],
+        ['마포구', -3569],
+        ['양천구',-2459],
+        ['강서구',-3469],
+        ['구로구',-3338],
+        ['금천구',-2567],
+        ['영등포구',-3922],
+        ['동작구',-2090],
+        ['관악구',-3653],
+        ['서초구',-3183],
+        ['강남구',-5196],
+        ['송파구',-4051],
+        ['강동구',-2789],
+        ]
+      }
+    },
+    {
+      name: '범죄율',
+      points: {
+        mapTo: 'x,y',
+        data: [
+          ['종로구',3690],
+        ['중구',4030],
+        ['용산구',3411],
+        ['성동구',2457],
+        ['광진구',3915],
+        ['동대문구',3680],
+        ['중랑구',4288],
+        ['성북구',3042],
+        ['강북구',3437],
+        ['도봉구',2249],
+        ['노원구',4007],
+        ['은평구',3590],
+        ['서대문구',2802],
+        ['마포구', 5172],
+        ['양천구',3515],
+        ['강서구',4629],
+        ['구로구',4810],
+        ['금천구',3293],
+        ['영등포구',5840],
+        ['동작구',3100],
+        ['관악구',5026],
+        ['서초구',4726],
+        ['강남구',7513],
+        ['송파구',5807],
+        ['강동구',3919],
+        ]
+      }
+    }
+  ]
+});
+
+
+  </script>
+
+{% endblock %}>

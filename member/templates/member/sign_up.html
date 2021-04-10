@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block title %}메인 페이지{% endblock %}
+{# 헤드 블락 #}
+{% block head %}
+
+{% endblock %}
+
+{# 컨텐츠 블락 #}
+{% block content %}
+    <div class="signup-box">
+        <div style="margin-left: 10%; width: 80%;" class="card">
+            <div class="body">
+                <form id="sign_up" action=''>
+                    {% csrf_token %}
+                    <div style="text-align : center; font-size: 25px;" class="msg">회원가입</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" id="user_id" class="form-control" minlength="5" name="user_id"
+                                   placeholder="아이디" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" id="pw" class="form-control" minlength="6" name="password"
+                                   placeholder="비밀번호" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" id="confirm" class="form-control" name="confirm" minlength="6"
+                                   placeholder="비밀번호 확인" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">account_circle</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" id="name" class="form-control" name="name" placeholder="이름" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">home</i>
+                        </span>
+                        <div class="form-line">
+                            <select style="width: 400px" id="current_residence" name="current_residence">
+                                <option value="" selected="selected">현재 거주지</option>
+                                <option value="jong_no_gu">종로구</option>
+                                <option value="jung_gu">중구</option>
+                                <option value="yong_san_gu">용산구</option>
+                                <option value="seong_dong_gu">성동구</option>
+                                <option value="gwang_jin_gu">광진구</option>
+                                <option value="dong_dae_mun_gu">동대문구</option>
+                                <option value="jung_lang_gu">중랑구</option>
+                                <option value="seong_bug_gu">성북구</option>
+                                <option value="gang_bug_gu">강북구</option>
+                                <option value="do_bong_gu">도봉구</option>
+                                <option value="no_won_gu">노원구</option>
+                                <option value="eun_pyeong_gu">은평구</option>
+                                <option value="seo_dae_mun_gu">서대문구</option>
+                                <option value="ma_po_gu">마포구</option>
+                                <option value="yang_cheon_gu">양천구</option>
+                                <option value="gang_seo_gu">강서구</option>
+                                <option value="gu_lo_gu">구로구</option>
+                                <option value="geum_cheon_gu">금천구</option>
+                                <option value="yeong_deung_po_gu">영등포구</option>
+                                <option value="dong_jag_gu">동작구</option>
+                                <option value="gwan_ag_gu">관악구</option>
+                                <option value="seo_cho_gu">서초구</option>
+                                <option value="gang_nam_gu">강남구</option>
+                                <option value="song_pa_gu">송파구</option>
+                                <option value="gang_dong_gu">강동구</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">home</i>
+                        </span>
+                        <div class="form-line">
+                            <select style="width: 400px" id="preferred_residence" name="preferred_residence">
+                                <option value="" selected="selected">선호 거주지</option>
+                                <option value="jong_no_gu">종로구</option>
+                                <option value="jung_gu">중구</option>
+                                <option value="yong_san_gu">용산구</option>
+                                <option value="seong_dong_gu">성동구</option>
+                                <option value="gwang_jin_gu">광진구</option>
+                                <option value="dong_dae_mun_gu">동대문구</option>
+                                <option value="jung_lang_gu">중랑구</option>
+                                <option value="seong_bug_gu">성북구</option>
+                                <option value="gang_bug_gu">강북구</option>
+                                <option value="do_bong_gu">도봉구</option>
+                                <option value="no_won_gu">노원구</option>
+                                <option value="eun_pyeong_gu">은평구</option>
+                                <option value="seo_dae_mun_gu">서대문구</option>
+                                <option value="ma_po_gu">마포구</option>
+                                <option value="yang_cheon_gu">양천구</option>
+                                <option value="gang_seo_gu">강서구</option>
+                                <option value="gu_lo_gu">구로구</option>
+                                <option value="geum_cheon_gu">금천구</option>
+                                <option value="yeong_deung_po_gu">영등포구</option>
+                                <option value="dong_jag_gu">동작구</option>
+                                <option value="gwan_ag_gu">관악구</option>
+                                <option value="seo_cho_gu">서초구</option>
+                                <option value="gang_nam_gu">강남구</option>
+                                <option value="song_pa_gu">송파구</option>
+                                <option value="gang_dong_gu">강동구</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="terms" id="terms" class="filled-in chk-col-pink">
+                        <label for="terms">회원가입하면 탈퇴가 불가능합니다. 읽었으면 체크!</label>
+                    </div>
+
+                    <button id="sign_in_btn" class="btn btn-block btn-lg bg-pink waves-effect" type="button">회원가입
+                    </button>
+                    <div class="m-t-25 m-b--5 align-center">
+                        <a href={% url 'sign_in' %}>이미 회원가입을 하셨습니까?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# 스크립트 블락 #}
+{% block script %}
+    <script>
+        $(function () {
+            $('#sign_in_btn').click(function () {
+                var user_id_value = $('#user_id').val();
+                var pw_value = $('#pw').val();
+                var name_value = $('#name').val();
+                var current_residence_value = $('#current_residence option:selected').val();
+                var preferred_residence_value = $('#preferred_residence option:selected').val();
+                var confirm_value = $('#confirm').val();
+                if (pw_value != confirm_value) {
+                    alert('비밀번호가 일치하지 않습니다.')
+                    return
+                }else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'sign_up' %}',
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            user_id: user_id_value,
+                            password: pw_value,
+                            name: name_value,
+                            current_residence: current_residence_value,
+                            preferred_residence: preferred_residence_value
+                        },
+                        success: function (result) {
+                            if(result=='회원가입 완료!'){
+                                alert(result)
+                                location.href='{% url 'main' %}'
+                            }else{
+                                alert(result)
+                                return
+                            }
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}지도{% endblock %}
+{% block contenttitle %}지도{% endblock %}
+
+{% block head %}
+    <style>
+        .wrap {
+            position: absolute;
+            left: 0;
+            bottom: 40px;
+            width: 288px;
+            height: 132px;
+            margin-left: -144px;
+            text-align: left;
+            overflow: hidden;
+            font-size: 12px;
+            font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+            line-height: 1.5;
+        }
+
+        .wrap * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .wrap .info {
+            width: 286px;
+            height: 120px;
+            border-radius: 5px;
+            border-bottom: 2px solid #ccc;
+            border-right: 1px solid #ccc;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .wrap .info:nth-child(1) {
+            border: 0;
+            box-shadow: 0px 1px 2px #888;
+        }
+
+        .info .title {
+            padding: 5px 0 0 10px;
+            height: 30px;
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .info .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #888;
+            width: 17px;
+            height: 17px;
+            background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+        }
+
+        .info .close:hover {
+            cursor: pointer;
+        }
+
+        .info .body {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info .desc {
+            position: relative;
+            margin: 13px 0 0 90px;
+            height: 75px;
+        }
+
+        .desc .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .desc .jibun {
+            font-size: 11px;
+            color: #888;
+            margin-top: -2px;
+        }
+
+        .info .img {
+            position: absolute;
+            top: 6px;
+            left: 5px;
+            width: 73px;
+            height: 71px;
+            border: 1px solid #ddd;
+            color: #888;
+            overflow: hidden;
+        }
+
+        .info:after {
+            content: '';
+            position: absolute;
+            margin-left: -12px;
+            left: 50%;
+            bottom: 0;
+            width: 22px;
+            height: 12px;
+            background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+        }
+
+        .info .link {
+            color: #5085BB;
+        }
+
+        .Map_info {
+            padding: 15px;
+        }
+
+        #conDiv {
+            height: 900px;
+        }
+
+        .form-control {
+            font-size: 17px;
+            width: 70%;
+            height: 100%;
+            margin-left: 15%;
+            margin-right: 15%;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        td {
+            width: 25%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="col-sm-1">
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div style="padding: 50px;;height: 900px" class="card">
+            <h1 style="text-align: center">서울시 교육 보기</h1><br><br>
+            <table style=" margin-top: 50px; margin-bottom: 50px; width: 100%; height: 50px;">
+                <tr>
+                    <td>
+                        <button style="color : white; background-color: #00B0E8" id="theme1" class="form-control"
+                                type='submit' value="박물관합계">서울시 유치원 수
+                        </button>
+                    </td>
+                    <td>
+                        <button style="color : white; background-color: #00B0E8" id="theme2" class="form-control"
+                                type='submit' value="공연장합계">서울시 초등학교 수
+                        </button>
+                    </td>
+                    <td>
+                        <button style="color : white; background-color: #00B0E8" id="theme3" class="form-control"
+                                type='submit' value="박물관합계">서울시 중학교 수
+                        </button>
+                    </td>
+                    <td>
+                        <button style="color : white; background-color: #00B0E8" id="theme4" class="form-control"
+                                type='submit' value="공연장합계">서울시 고등학교 수
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <div id="map" style="width:100%;height:480px;"></div>
+        </div>
+    </div>
+    <div class="col-sm-1">
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1b296b1b2ab6211a8c7bc206ee1252e7"></script>
+    <script>
+        $(function () {
+            $('#theme1').click(function () {
+                location.href = '{% url 'kindergarden' %}'
+            })
+            $('#theme2').click(function () {
+                location.href = '{% url 'elementary' %}'
+            })
+            $('#theme3').click(function () {
+                location.href = '{% url 'middle' %}'
+            })
+            $('#theme4').click(function () {
+                location.href = '{% url 'high' %}'
+            })
+        })
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(37.56171650378457, 126.98478822618519),
+            level: 9
+        };
+        var map = new kakao.maps.Map(container, options);
+
+        // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+        var mapTypeControl = new kakao.maps.MapTypeControl();
+
+        // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+        // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+        map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+        var zoomControl = new kakao.maps.ZoomControl();
+        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+        var Maptype = kakao.maps.MapTypeId.USE_DISTRICT;
+
+        // maptype에 해당하는 지도타입을 지도에 추가합니다
+        map.addOverlayMapTypeId(Maptype);
+
+        {% for t in test %}
+
+            var marker_{{ t.pk }} = new kakao.maps.Marker({
+                map: map,
+                position: new kakao.maps.LatLng(Number({{ t.longi }}), Number({{ t.lati }}))
+            });
+
+
+        {% endfor %}
+        // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
+
+    </script>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block contenttitle %}의료 & 치안 차트{% endblock %}
+{% block title %}의료 & 치안 차트{% endblock %}
+
+{% block head %}
+<style>
+canvas[data-class]{
+    width:600px;
+    height:427px;
+}
+.hanglue{
+    font-family:'Malgun Gothic';
+    font-size:15pt;
+    font-weight:bold;
+}
+.item_none{
+    height:80px;
+    margin-left:20px;
+    height:40px;
+}
+
+
+
+label[for=eyes_01], label[for=eyes_02], label[for=nose_01], label[for=nose_02], label[for=mouth_01], label[for=mouth_02] {
+    margin-left:20px;
+    height:inherit;
+}
+.eyes_01{
+    width:100px;
+    height:40px;
+}
+.eyes_02{
+    width:50px;
+    height:40px;
+}
+.nose_01{
+    width:30px;
+    height:50px;
+}
+.nose_02{
+    width:30px;
+    height:30px;
+}
+.mouth_01{
+    width:50px;
+    height:30px;
+}
+.mouth_02{
+    width:60px;
+    height:30px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="row clearfix">
+                <!-- Line Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">병원 & 병상수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="hospital_sickbed-chart" data-url="{% url 'chart:hospital_sickbed-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Line Chart -->
+                <!-- Bar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">약국수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="pharmacy-chart" data-url="{% url 'chart:pharmacy-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Bar Chart -->
+            </div>
+
+            <div class="row clearfix">
+                <!-- Radar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">범죄 발생 & 검거수</div>
+                        </div>
+                        <div class="body">
+                            <canvas id="crime-chart" data-url="{% url 'chart:crime-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Radar Chart -->
+                <!-- Pie Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">미정</div>
+                        </div>
+                        <div class="body">
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Pie Chart -->
+            </div>
+
+
+
+{% csrf_token %}
+{% endblock %}
+ 
+{% block script %}
+
+  <div id="container" style="width: 75%;">
+{#    <canvas id="population-chart" data-url="{% url 'chart:population-chart' %}"></canvas>#}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+    $(function hospitalSickbedChart() {
+
+      var $hospitalSickbedChart = $("#hospital_sickbed-chart");
+      $.ajax({
+        url: $hospitalSickbedChart.data("url"),
+        success: function (data) {
+          var ctx = $hospitalSickbedChart[0].getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [
+                  {
+                label: '병원수',
+                backgroundColor: "#91D4C2",
+                data: data.hospital
+              },
+                  {
+                label: '병상수',
+                backgroundColor: "#416EB6",
+                data: data.sickbed
+              }
+              ]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Hospital & Sickbed Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+    $(function crimeChart() {
+
+      var $crimeChart = $("#crime-chart");
+      $.ajax({
+        url: $crimeChart.data("url"),
+        success: function (data) {
+          var ctx = $crimeChart[0].getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [
+                  {
+                label: '범죄 발생수',
+                backgroundColor: "#DAB2D3",
+                data: data.crime_occ
+              },
+                  {
+                label: '범죄 검거수',
+                backgroundColor: "#65C4D8",
+                data: data.crime_arr
+              }
+              ]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Crime Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+     $(function pharmacyChart() {
+
+      var $pharmacyChart = $("#pharmacy-chart");
+      $.ajax({
+        url: $pharmacyChart.data("url"),
+        success: function (data) {
+          var ctx = $pharmacyChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: '약국수',
+                  backgroundColor: '#FEE19F',
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Pharmacy Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+
+  </script>
+
+{% endblock %}

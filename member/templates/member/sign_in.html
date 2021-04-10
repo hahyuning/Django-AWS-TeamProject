@@ -1,0 +1,83 @@
+{% extends 'base.html'%}
+{% block title %}메인 페이지{% endblock %}
+{# 헤드 블락 #}
+{% block head %}
+<style>
+    .input-group{
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-left: 20%;
+        width: 80%;
+        height: 50px;
+    }
+
+</style>
+{% endblock %}
+
+{# 컨텐츠 블락 #}
+{% block content %}
+    <div class="login-box">
+        <div style="height: 500px" class="card">
+            <div class="body">
+                <form id="sign_in" action="">
+                    <div style="text-align: center; font-size: 45px" class="msg">서울시 데이터 보기</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" id="user_id" name="user_id" placeholder="아이디" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" id="pw" name="pw" placeholder="비밀번호" required>
+                        </div>
+                    </div>
+                    <div style="width: 60%;margin-left: 20%" class="row">
+                        <button id="sign_in_btn" style="height: 50px; font-size: 17px;" class="btn btn-block bg-pink waves-effect" type="button">로그인</button>
+                    </div>
+                    <div class="row m-t-15 m-b--20">
+                        <div class="col-xs-6">
+                            <a href={% url 'create_member' %}>회원가입</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# 스크립트 블락 #}
+{% block script %}
+<script>
+    $(function () {
+        $('#sign_in_btn').click(function () {
+            var user_id_value = $('#user_id').val();
+            var pw_value = $('#pw').val();
+            $.ajax({
+                type : 'POST',
+                url : '{% url 'signin' %}',
+                data : {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    user_id : user_id_value,
+                    pw : pw_value
+                },
+                success: function (result) {
+                    if(result=='로그인 성공!'){
+                                alert(result)
+                                sessionStorage.setItem('id',user_id_value)
+                                location.href='{% url 'main' %}'
+                            }else{
+                                alert(result)
+                                return
+                            }
+                }
+            })
+        })
+    })
+</script>
+{% endblock %}

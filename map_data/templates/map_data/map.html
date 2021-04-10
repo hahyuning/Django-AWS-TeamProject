@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}지도{% endblock %}
+{% block contenttitle %}지도{% endblock %}
+
+{% block head %}
+    <style>
+        .wrap {
+            position: absolute;
+            left: 0;
+            bottom: 40px;
+            width: 288px;
+            height: 132px;
+            margin-left: -144px;
+            text-align: left;
+            overflow: hidden;
+            font-size: 12px;
+            font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+            line-height: 1.5;
+        }
+
+        .wrap * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .wrap .info {
+            width: 286px;
+            height: 120px;
+            border-radius: 5px;
+            border-bottom: 2px solid #ccc;
+            border-right: 1px solid #ccc;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .wrap .info:nth-child(1) {
+            border: 0;
+            box-shadow: 0px 1px 2px #888;
+        }
+
+        .info .title {
+            padding: 5px 0 0 10px;
+            height: 30px;
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .info .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #888;
+            width: 17px;
+            height: 17px;
+            background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+        }
+
+        .info .close:hover {
+            cursor: pointer;
+        }
+
+        .info .body {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info .desc {
+            position: relative;
+            margin: 13px 0 0 90px;
+            height: 75px;
+        }
+
+        .desc .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .desc .jibun {
+            font-size: 11px;
+            color: #888;
+            margin-top: -2px;
+        }
+
+        .info .img {
+            position: absolute;
+            top: 6px;
+            left: 5px;
+            width: 73px;
+            height: 71px;
+            border: 1px solid #ddd;
+            color: #888;
+            overflow: hidden;
+        }
+
+        .info:after {
+            content: '';
+            position: absolute;
+            margin-left: -12px;
+            left: 50%;
+            bottom: 0;
+            width: 22px;
+            height: 12px;
+            background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+        }
+
+        .info .link {
+            color: #5085BB;
+        }
+
+        .Map_info {
+            padding: 15px;
+        }
+
+        #conDiv {
+            height: 900px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="col-sm-1">
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div style="padding: 50px;;height: 900px" class="card">
+            <div id="map" style="width:900px;height:480px;"></div>
+        </div>
+    </div>
+    <div class="col-sm-1">
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1b296b1b2ab6211a8c7bc206ee1252e7"></script>
+    <script>
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(37.56171650378457, 126.98478822618519),
+            level: 9
+        };
+        var map = new kakao.maps.Map(container, options);
+
+        // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+        var mapTypeControl = new kakao.maps.MapTypeControl();
+
+        // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+        // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+        map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+        var zoomControl = new kakao.maps.ZoomControl();
+        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+        var Maptype = kakao.maps.MapTypeId.USE_DISTRICT;
+
+        // maptype에 해당하는 지도타입을 지도에 추가합니다
+        map.addOverlayMapTypeId(Maptype);
+
+        var jong_no_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.58362860602399, 126.98405918625235)
+        });
+
+        var jung_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.56229410159019, 126.99782687267194)
+        });
+
+        var yong_san_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.53403680258268, 126.97827692869723)
+        });
+
+        var seong_dong_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.55479035177554, 127.04200958105484)
+        });
+
+        var gwang_jin_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.54900051006671, 127.08546115078106)
+        });
+
+        var dong_dae_mun_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.58592303846471, 127.05579455845795)
+        });
+
+        var jung_lang_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.60204666746701, 127.09131988094077)
+        });
+
+        var seong_bug_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.59977303757493, 127.02391638627951)
+        });
+
+        var gang_bug_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.63552586530595, 127.01377663573857)
+        });
+
+        var do_bong_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.671272733291396, 127.03409538626016)
+        });
+
+        var no_won_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.655684592142386, 127.07542933050684)
+        });
+
+        var eun_pyeong_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.62166480111265, 126.92677990880277)
+        });
+
+        var seo_dae_mun_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.58073043723549, 126.9384128826547)
+        });
+        var ma_po_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.56283547960158, 126.90872800177556)
+        });
+
+        var yang_cheon_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.522418984230015, 126.85665000161944)
+        });
+        var gang_seo_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.56965589628053, 126.82178609628069)
+        });
+
+        var gu_lo_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.49993259860297, 126.85886431668023)
+        });
+
+        var geum_cheon_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.46249276605609, 126.90016917252777)
+        });
+
+        var yeong_deung_po_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.52535506258144, 126.91022172045044)
+        });
+
+        var dong_jag_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.507500124370196, 126.94426386165026)
+        });
+
+        var gwan_ag_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.47059586569687, 126.94646174413027)
+        });
+
+        var seo_cho_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.49424982486802, 127.01230320739525)
+        });
+        var gang_nam_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.49942309392292, 127.06369158133124)
+        });
+
+        var song_pa_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.509187131425016, 127.1150940810847)
+        });
+
+        var gang_dong_gu_marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(37.55355390305146, 127.14630677546434)
+        });
+
+
+        var content = '<div class="wrap">' +
+            '    <div class="info">' +
+            '        <div class="title">' +
+            '            종로구' +
+            '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+            '        </div>' +
+            '        <div class="Map_info">' +
+            '            위도경도 표시<br> ' +
+            '                   위도 37.58362860602399<br>' +
+            '                   경도 126.98405918625235</div>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>';
+
+        // 마커 위에 커스텀오버레이를 표시합니다
+        // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+        var overlay = new kakao.maps.CustomOverlay({
+            content: content,
+            map: map,
+            position: jong_no_gu_marker.getPosition(),
+        });
+
+        // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+        kakao.maps.event.addListener(jong_no_gu_marker, 'click', function () {
+            overlay.setMap(map);
+        });
+
+        // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
+        function closeOverlay() {
+            overlay.setMap(null);
+        }
+
+
+    </script>
+{% endblock %}
+

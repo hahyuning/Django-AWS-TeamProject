@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block title %}서울 행사 정보{% endblock %}
+{% block head %}
+{% endblock %}
+{% block script %}
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=128eb0a4fa4488bacd0f3a0d3e6afbf8&libraries=services"></script>
+    <script>
+        function func(location) {
+            $("#map_loc").children().remove()
+            $("#map_loc").append("<div id='map' style='width:600px;height:350px;'></div>")
+            var infowindow = new kakao.maps.InfoWindow({zIndex: 1});
+            var container = document.getElementById('map');
+            var options = {
+                center: new kakao.maps.LatLng(37.5642135, 127.0016985),
+                level: 8
+            };
+            var map = new kakao.maps.Map(container, options);
+            var ps = new kakao.maps.services.Places();
+            ps.keywordSearch(location, placesSearchCB);
+
+            function placesSearchCB(data, status) {
+                if (status == kakao.maps.services.Status.OK) {
+                    var bounds = new kakao.maps.LatLngBounds();
+                    for (var i = 0; i < data.length; i++) {
+                        displayMarker(data[i]);
+                        bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+                    }
+                    map.setBounds(bounds);
+                }
+            }
+
+            function displayMarker(place) {
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: new kakao.maps.LatLng(place.y, place.x)
+                });
+                kakao.maps.event.addListener(marker, 'click', function () {
+                    infowindow.setContent('<div style="padding:5px;font-size:12px;">' + location + '</div>');
+                    infowindow.open(map, marker);
+                });
+            }
+        }
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="body">
+                <div id="map_loc"></div>
+                <form action="{% url 'map:filter' %}">
+                    <img src="/static/img/5%20(2).png">
+                    <button style="border: 0px; background-color: white;" name="filt" value="전체보기"><img
+                            src="/static/img/6.png"></button>
+                    <button style="border: 0px; background-color: white;" name="filt" value="공연"><img
+                            src="/static/img/4%20(2).png"></button>
+                    <button style="border: 0px; background-color: white;" name="filt" value="축제"><img
+                            src="/static/img/2%20(2).png"></button>
+                    <button style="border: 0px; background-color: white;" name="filt" value="교육/체험"><img
+                            src="/static/img/1%20(2).png"></button>
+                    <button style="border: 0px; background-color: white;" name="filt" value="기타"><img
+                            src="/static/img/7.png"></button>
+                    <select name="gu" class="form-control">
+                        <option value="">자치구 선택</option>
+                        <option value="종로구">종로구</option>
+                        <option value="중구">중구</option>
+                        <option value="용산구">용산구</option>
+                        <option value="성동구">성동구</option>
+                        <option value="광진구">광진구</option>
+                        <option value="동대문구">동대문구</option>
+                        <option value="중랑구">중랑구</option>
+                        <option value="성북구">성북구</option>
+                        <option value="강북구">강북구</option>
+                        <option value="도봉구">도봉구</option>
+                        <option value="노원구">노원구</option>
+                        <option value="은평구">은평구</option>
+                        <option value="서대문구">서대문구</option>
+                        <option value="마포구">마포구</option>
+                        <option value="양천구">양천구</option>
+                        <option value="강서구">강서구</option>
+                        <option value="구로구">구로구</option>
+                        <option value="금천구">금천구</option>
+                        <option value="영등포구">영등포구</option>
+                        <option value="동작구">동작구</option>
+                        <option value="관악구">관악구</option>
+                        <option value="서초구">서초구</option>
+                        <option value="강남구">강남구</option>
+                        <option value="송파구">송파구</option>
+                        <option value="강동구">강동구</option>
+                    </select><br><br><br>
+                    <input type="submit" class="btn btn-danger" value="검색">
+                </form>
+                <br><br>
+                {% comment %}<iframe title="서울 행사 정보" width="700px" height="800px" frameborder="0" scrolling="auto" src="http://opengov.seoul.go.kr/openweb?gvrncd=100202"></iframe>{% endcomment %}
+                <div id="event_div">
+                    <table class="table-condensed" id="event_table">
+                        <tr>
+                            <td>번호</td>
+                            <td>행사명</td>
+                            <td>위치</td>
+                            <td>회사</td>
+                            <td>시작일</td>
+                            <td>종료일</td>
+                        </tr>
+                        {% for event in object_list %}
+                            <tr id="event_list_tr">
+                                <td>{{ forloop.counter }}</td>
+                                <td><a href="{% url 'map:detail' pk=event.id %}">
+                                    <img src="{{ event.img }}" height="100px" width="100px"><br>{{ event.event_name }}
+                                </a></td>
+                                <td><a href="#top" style="cursor:pointer"
+                                       onclick="func('{{ event.location }}');">{{ event.location }}</a></td>
+                                <td>{{ event.agency }}</td>
+                                <td>{{ event.start_date }}</td>
+                                <td>{{ event.end_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% block pagination %}
+                    {% if is_paginated %}
+                        <ul class="pagination justify-content-center pagination-sm">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="{% url 'map:start' %}?page={{ page_obj.previous_page_number }}"
+                                       tabindex="-1">Previous</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                            {% endif %}
+
+                            {% for object in page_obj.paginator.page_range %}
+                                <li class="page-item {% if page_obj.number == forloop.counter %}disabled{% endif %}">
+                                    <a class="page-link"
+                                       href="{{ request.path }}?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="{% url 'map:start' %}?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

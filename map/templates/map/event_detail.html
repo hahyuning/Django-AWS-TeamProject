@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}행사 정보{% endblock %}
+{% block head %}
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=128eb0a4fa4488bacd0f3a0d3e6afbf8&libraries=services"></script>
+    <script>
+        var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(37.5642135, 127.0016985),
+            level: 8
+        };
+        var map = new kakao.maps.Map(container, options);
+        var ps = new kakao.maps.services.Places();
+        ps.keywordSearch('{{ object.location }}', placesSearchCB);
+
+        function placesSearchCB (data, status) {
+            if (status == kakao.maps.services.Status.OK) {
+                var bounds = new kakao.maps.LatLngBounds();
+                for (var i=0; i<data.length; i++) {
+                    displayMarker(data[i]);
+                    bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+                    }
+                map.setBounds(bounds);
+            }
+        }
+
+    function displayMarker(place) {
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(place.y, place.x)
+        });
+        kakao.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent('<div style="padding:5px;font-size:12px;">' + '{{ object.location }}' +'</div>');
+            infowindow.open(map, marker);
+        });
+    }
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="card">
+    <div class="body">
+    <br><br>
+    <div align="center"><img src="{{ object.img }}" height="400px" width="300px"></div>
+    <br><br>
+    <ul>
+        <li>행사명 : {{ object.event_name }}</li>
+        <li>행사내용</li>
+        <p>{{ object.information }}</p>
+        <li>캐스팅 : {{ object.casting }}</li>
+        <li>시작일 ~ 종료일 : {{ object.start_date }} ~ {{ object.end_date }}</li>
+        <li>이용대상 / 이용요금</li>
+        <p>{{ object.user }} / {{ object.cost }}</p>
+        <li>주관 업체 : {{ object.agency }}</li>
+        <p>전화 번호 : {{ object.tel }} / 이메일 : {{ object.email }}</p>
+        <li>기타정보 : {{ object.etc }}</li>
+        <li><a href="{{ object.url }}">행사 관련 홈페이지</a></li>
+    </ul>
+    <ul>
+        <li>위치 정보 : {{ object.location }}</li>
+    </ul>
+        <div id="map" style="width:800px;height:400px;"></div><br><br></div></div></div>
+{% endblock %}

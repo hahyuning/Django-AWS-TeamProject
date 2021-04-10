@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block contenttitle %}환경 차트{% endblock %}
+{% block title %}환경 차트{% endblock %}
+
+{% block head %}
+<style>
+canvas[data-class]{
+    width:600px;
+    height:427px;
+}
+.hanglue{
+    font-family:'Malgun Gothic';
+    font-size:15pt;
+    font-weight:bold;
+}
+.item_none{
+    height:80px;
+    margin-left:20px;
+    height:40px;
+}
+
+
+
+label[for=eyes_01], label[for=eyes_02], label[for=nose_01], label[for=nose_02], label[for=mouth_01], label[for=mouth_02] {
+    margin-left:20px;
+    height:inherit;
+}
+.eyes_01{
+    width:100px;
+    height:40px;
+}
+.eyes_02{
+    width:50px;
+    height:40px;
+}
+.nose_01{
+    width:30px;
+    height:50px;
+}
+.nose_02{
+    width:30px;
+    height:30px;
+}
+.mouth_01{
+    width:50px;
+    height:30px;
+}
+.mouth_02{
+    width:60px;
+    height:30px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="row clearfix">
+                <!-- Line Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">공원수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="park-chart" data-url="{% url 'chart:park-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Line Chart -->
+                <!-- Bar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">쓰레기배출량</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="garbage-chart" data-url="{% url 'chart:garbage-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Bar Chart -->
+            </div>
+
+            <div class="row clearfix">
+                <!-- Radar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">먼지</div>
+                        </div>
+                        <div class="body">
+                            <canvas id="dust-chart" data-url="{% url 'chart:dust-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Radar Chart -->
+                <!-- Pie Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">녹지화 면적</div>
+                        </div>
+                        <div class="body">
+                            <canvas id="green-chart" data-url="{% url 'chart:green-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Pie Chart -->
+            </div>
+
+
+
+{% csrf_token %}
+{% endblock %}
+ 
+{% block script %}
+
+  <div id="container" style="width: 75%;">
+{#    <canvas id="population-chart" data-url="{% url 'chart:population-chart' %}"></canvas>#}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+    $(function parkChart() {
+
+      var $parkChart = $("#park-chart");
+      $.ajax({
+        url: $parkChart.data("url"),
+        success: function (data) {
+          var ctx = $parkChart[0].getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: '공원수',
+                backgroundColor: "#91D4C2",
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Park Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+     $(function garbageChart() {
+
+      var $garbageChart = $("#garbage-chart");
+      $.ajax({
+        url: $garbageChart.data("url"),
+        success: function (data) {
+          var ctx = $garbageChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: '쓰레기 배출량',
+                  backgroundColor: '#E5BB4B',
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Garbage Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+    $(function dustChart() {
+      var i = 0;
+      var $dustChart = $("#dust-chart");
+      {#alert('1')#}
+      $.ajax({
+        url: $dustChart.data("url"),
+        success: function (data) {
+          var ctx = $dustChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                              {
+                                  label: '미세먼지',
+                        data: data.data,
+                        backgroundColor: '#CC8A56',
+                      },
+                      ]
+                  },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: ' Dust Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+    $(function greenChart() {
+
+      var $greenChart = $("#green-chart");
+      $.ajax({
+        url: $greenChart.data("url"),
+        success: function (data) {
+          var ctx = $greenChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: '녹지화 면적',
+                  backgroundColor: '#45BB89',
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Green Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+
+  </script>
+
+{% endblock %}

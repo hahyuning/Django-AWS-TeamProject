@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block contenttitle %}교육 차트{% endblock %}
+{% block title %}교육 차트{% endblock %}
+
+{% block head %}
+<style>
+canvas[data-class]{
+    width:600px;
+    height:427px;
+}
+.hanglue{
+    font-family:'Malgun Gothic';
+    font-size:15pt;
+    font-weight:bold;
+}
+.item_none{
+    height:80px;
+    margin-left:20px;
+    height:40px;
+}
+
+
+
+label[for=eyes_01], label[for=eyes_02], label[for=nose_01], label[for=nose_02], label[for=mouth_01], label[for=mouth_02] {
+    margin-left:20px;
+    height:inherit;
+}
+.eyes_01{
+    width:100px;
+    height:40px;
+}
+.eyes_02{
+    width:50px;
+    height:40px;
+}
+.nose_01{
+    width:30px;
+    height:50px;
+}
+.nose_02{
+    width:30px;
+    height:30px;
+}
+.mouth_01{
+    width:50px;
+    height:30px;
+}
+.mouth_02{
+    width:60px;
+    height:30px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="row clearfix">
+                <!-- Line Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">학교수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="school_num-chart" data-url="{% url 'chart:school_num-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Line Chart -->
+                <!-- Bar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">학급당 학생수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="student_num-chart" data-url="{% url 'chart:student_num-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Bar Chart -->
+            </div>
+
+            <div class="row clearfix">
+                <!-- Radar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">학급당 교사수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="teacher_num-chart" data-url="{% url 'chart:teacher_num-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Radar Chart -->
+                <!-- Pie Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">미정</div>
+                        </div>
+                        <div class="body">
+                            <canvas id="pie_chart" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Pie Chart -->
+            </div>
+
+
+
+{% csrf_token %}
+{% endblock %}
+ 
+{% block script %}
+
+  <div id="container" style="width: 75%;">
+{#    <canvas id="population-chart" data-url="{% url 'chart:population-chart' %}"></canvas>#}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+  {# schoolNum #}
+    $(function schoolNumChart() {
+
+      var $schoolNumChart = $("#school_num-chart");
+      $.ajax({
+        url: $schoolNumChart.data("url"),
+        success: function (data) {
+            console.log(data)
+          var ctx = $schoolNumChart[0].getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                              {
+                                  label: '유치원',
+                        data: data.garden,
+                        backgroundColor: '#E1DCD9',
+                      },
+                      {
+                          label: '초등학교',
+                        data: data.element,
+                        backgroundColor: '#8F8681',
+                      },
+                      {
+                          label: '중학교',
+                        data: data.middle,
+                        backgroundColor: '#A67F78',
+                      },
+                          {
+                              label: '고등학교',
+                        data: data.high,
+                        backgroundColor: '#32435F',
+                      }
+                      ]
+                  },
+            options: {
+                scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        },
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: ' the number of schools Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+     {# studentNum #}
+    $(function studentNumChart() {
+
+      var $studentNumChart = $("#student_num-chart");
+      $.ajax({
+        url: $studentNumChart.data("url"),
+        success: function (data) {
+            console.log(data)
+          var ctx = $studentNumChart[0].getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                              {
+                                  label: '유치원',
+                        data: data.garden_num,
+                        backgroundColor: '#D1DDDB',
+                      },
+                      {
+                          label: '초등학교',
+                        data: data.element_num,
+                        backgroundColor: '#85B8CB',
+                      },
+                      {
+                          label: '중학교',
+                        data: data.middle_num,
+                        backgroundColor: '#1D6A96',
+                      },
+                          {
+                              label: '고등학교',
+                        data: data.high_num,
+                        backgroundColor: '#283B42',
+                      }
+                      ]
+                  },
+            options: {
+                scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        },
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: ' the number of student num'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+     {# teacherNum #}
+    $(function teacherNumChart() {
+
+      var $teacherNumChart = $("#teacher_num-chart");
+      $.ajax({
+        url: $teacherNumChart.data("url"),
+        success: function (data) {
+            console.log(data)
+          var ctx = $teacherNumChart[0].getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                              {
+                                  label: '유치원',
+                        data: data.garden_gyo,
+                        backgroundColor: '#FFC2C3',
+                      },
+                      {
+                          label: '초등학교',
+                        data: data.element_gyo,
+                        backgroundColor: '#FE7773',
+                      },
+                      {
+                          label: '중학교',
+                        data: data.middle_gyo,
+                        backgroundColor: '#E81E25',
+                      },
+                          {
+                              label: '고등학교',
+                        data: data.high_gyo,
+                        backgroundColor: '#0E0301',
+                      }
+                      ]
+                  },
+            options: {
+                scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        },
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: ' the number of teacher num'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+
+
+  </script>
+
+{% endblock %}
