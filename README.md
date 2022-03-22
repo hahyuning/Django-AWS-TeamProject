@@ -1,5 +1,5 @@
 # Django-AWS
-서울시 정보 (통계, 문화) 제공 사이트
+서울시 관련 통계/문화 정보를 제공하는 웹 사이트
 
 ## 개요
 1. 참여 인원: 3명
@@ -9,15 +9,16 @@
 + Python
 + Django
 + AWS - RDB, S3
-+ Kakao Map API
-+ Ajax
++ Map API
++ JavaScript, JQuery, Ajax
 <br>
 
 3. 맡은 역할
++ MTV 패턴 기반의 모델 설계
 + AWS - RDB, S3 연동
-+ 서울시 행사 정보 출력, 필터링
-+ Kakao API를 이용한 행사장 위치 출력
-+ 게시판 기능, 
++ 서울시 문화 정보 수집과 행사 정보 출력, 필터링
++ 지도 API를 연동
++ 게시판과 페이징 기능 구현
 <br>
 
 4. 구현 화면
